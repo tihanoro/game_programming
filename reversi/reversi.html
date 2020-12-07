@@ -1,5 +1,6 @@
 <html>
     <head>
+        <meta charset="utf-8" />
         <title>リバーシ</title>
         <script type="text/javascript" src="./reversi.js" charset="utf-8"></script>
     </head>
@@ -36,6 +37,11 @@
                         ctx.strokeRect(i, j, 100, 100);
                     }
                 }
+                
+                writeBlackCell(3, 3);
+                writeWhiteCell(4, 3);
+                writeWhiteCell(3, 4);
+                writeBlackCell(4, 4);
             }
 
             //canvasを消す関数
@@ -43,30 +49,58 @@
                 ctx.clearRect(0, 0, cs.width, cs.height);
             }
 
-            //なんかよくわからん関数
-            function writeCell(y, x){
-                //ctx.fillStyle = "rgb(0,0,0)";
+            //セルを書く関数
+            function writeBlackCell(y, x){
+                ctx.fillStyle = "rgb(0,0,0)";
                 ctx.beginPath();
                 ctx.arc(y*100 + 50, x*100 + 50, 45, 0, Math.PI*2, true);
                 ctx.fill();
             }
 
-            function cellPut(){
-                var form = document.forms.Cell;
-                ctx.fillStyle = form.color.value;
+            function writeWhiteCell(y, x){
+                ctx.fillStyle = "rgb(255,255,255)";
                 ctx.beginPath();
-                ctx.arc(eval(form.y.value)*100 + 50, eval(form.x.value)*100 + 50, 45, 0, Math.Pi*2, true);
+                ctx.arc(y*100 + 50, x*100 + 50, 45, 0, Math.PI*2, true);
                 ctx.fill();
-                console.log(form.y.value);
             }
+            
+            document.addEventListener("DOMContentLoaded", function(){
+                //指定されたラジオボタンの値を取得
+                function getRadioValue(name){
+                    var result = "";
+                    var elems = document.getElementsByName(name);
+
+                    //ラジオボタンを走査し、チェック状態にあるかを確認
+                    for(var i=0, len = elems.length; i < len; i++){
+                        var elem = elems.item(i);
+                        //チェックされている項目の値を配列に追加
+                        if(elem.checked){
+                            result = elem.value;
+                            break;
+                        }
+                    }
+                    return result;
+                }
+                
+                document.getElementById("btn").addEventListener("click", function() {
+                    var dataY = document.getElementById("y");
+                    var dataX = document.getElementById("x");
+                    var color = getRadioValue("color");
+                    if(color == "black"){
+                        writeBlackCell(dataY.value, dataX.value);
+                    }else{
+                        writeWhiteCell(dataY.value, dataX.value);
+                    }
+                }, false);
+            }, false);
         </script>
         <br>
         <form name="Cell">
-            <input type="radio" name="color" value="rgb(0,0,0)" id="v1">
+            <input type="radio" name="color" value="black" id="v1" />
             <label for="v1">黒</label>
-            <input type="radio" name="color" value="rgb(255,255,255)" id="v2">
+            <input type="radio" name="color" value="white" id="v2" />
             <label for="v2">白</label>
-            <select name="y">
+            <select id="y" name="y">
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">3</option>
@@ -76,7 +110,7 @@
                 <option value="6">7</option>
                 <option value="7">8</option>
             </select>
-            <select name="x">
+            <select id="x" name="x">
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">3</option>
@@ -86,7 +120,7 @@
                 <option value="6">7</option>
                 <option value="7">8</option>
             </select>
-            <input type="button" value="コマを置く" onclick="cellPut();">
+            <input id="btn" type="button" value="コマを置く" />
         </form>
         <input type="button" name="write" value="盤面を描画" onclick="printBoard();">
         <input type="button" name="clear" value="クリア" onclick="remove();">
