@@ -6,93 +6,27 @@
     </head>
     <body>
         <h1>リバーシ</h1>
+        <canvas id="canvas"></canvas>
         <script>
             //canvasの初期設定
-            const cs = document.createElement('canvas');
+            const cs = document.getElementById('canvas');
             const ctx = cs.getContext('2d');
 
             //canvasの大きさの指定
             cs.width = '800';
             cs.height = '800';
 
-            //制御変数
-            var i,j;
-
-            //HTMLにcanvasを追加
-            document.body.appendChild(cs);
-
-            //ctx.strokeRect(0, 0, 100, 100);
-            //ctx.fillRect(150, 0, 100, 100);
-
-            //盤面を描写する関数
-            function printBoard(){
-                //背景の設定
-                ctx.fillStyle = "green";
-                ctx.fillRect(0, 0, 800, 800);
-
-                //マスの設定
-                ctx.strokeRect(0, 0, 800, 800);
-                for(i=0;i<800;i+=100){
-                    for(j=0;j<800;j+=100){
-                        ctx.strokeRect(i, j, 100, 100);
-                    }
+            cs.onclick = function(e) {
+                var rect = e.target.getBoundingClientRect();
+                mouseX = Math.floor((e.clientX - Math.floor(rect.left))/100);
+                mouseY = Math.floor((e.clientX - Math.floor(rect.top))/100);
+                if(e.button === 0){
+                    writeBlackCell(mouseX,mouseY);
                 }
-                
-                writeBlackCell(3, 3);
-                writeWhiteCell(4, 3);
-                writeWhiteCell(3, 4);
-                writeBlackCell(4, 4);
-            }
-
-            //canvasを消す関数
-            function remove(){
-                ctx.clearRect(0, 0, cs.width, cs.height);
-            }
-
-            //セルを書く関数
-            function writeBlackCell(y, x){
-                ctx.fillStyle = "rgb(0,0,0)";
-                ctx.beginPath();
-                ctx.arc(y*100 + 50, x*100 + 50, 45, 0, Math.PI*2, true);
-                ctx.fill();
-            }
-
-            function writeWhiteCell(y, x){
-                ctx.fillStyle = "rgb(255,255,255)";
-                ctx.beginPath();
-                ctx.arc(y*100 + 50, x*100 + 50, 45, 0, Math.PI*2, true);
-                ctx.fill();
-            }
-            
-            document.addEventListener("DOMContentLoaded", function(){
-                //指定されたラジオボタンの値を取得
-                function getRadioValue(name){
-                    var result = "";
-                    var elems = document.getElementsByName(name);
-
-                    //ラジオボタンを走査し、チェック状態にあるかを確認
-                    for(var i=0, len = elems.length; i < len; i++){
-                        var elem = elems.item(i);
-                        //チェックされている項目の値を配列に追加
-                        if(elem.checked){
-                            result = elem.value;
-                            break;
-                        }
-                    }
-                    return result;
+                if(e.button === 1){
+                    writeWhiteCell(mouseX,mouseY);
                 }
-                
-                document.getElementById("btn").addEventListener("click", function() {
-                    var dataY = document.getElementById("y");
-                    var dataX = document.getElementById("x");
-                    var color = getRadioValue("color");
-                    if(color == "black"){
-                        writeBlackCell(dataY.value, dataX.value);
-                    }else{
-                        writeWhiteCell(dataY.value, dataX.value);
-                    }
-                }, false);
-            }, false);
+            }
         </script>
         <br>
         <form name="Cell">
@@ -124,6 +58,5 @@
         </form>
         <input type="button" name="write" value="盤面を描画" onclick="printBoard();">
         <input type="button" name="clear" value="クリア" onclick="remove();">
-        <input type="button" name="clear" value="実行" onclick="writeCell(0, 1);">
     </body>
 </html>
