@@ -7,27 +7,6 @@
     <body>
         <h1>リバーシ</h1>
         <canvas id="canvas"></canvas>
-        <script>
-            //canvasの初期設定
-            const cs = document.getElementById('canvas');
-            const ctx = cs.getContext('2d');
-
-            //canvasの大きさの指定
-            cs.width = '800';
-            cs.height = '800';
-
-            cs.onclick = function(e) {
-                var rect = e.target.getBoundingClientRect();
-                mouseX = Math.floor((e.clientX - Math.floor(rect.left))/100);
-                mouseY = Math.floor((e.clientX - Math.floor(rect.top))/100);
-                if(e.button === 0){
-                    writeBlackCell(mouseX,mouseY);
-                }
-                if(e.button === 1){
-                    writeWhiteCell(mouseX,mouseY);
-                }
-            }
-        </script>
         <br>
         <form name="Cell">
             <input type="radio" name="color" value="black" id="v1" />
